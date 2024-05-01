@@ -1,10 +1,12 @@
-import React, {StrictMode} from 'react';
+import React from 'react';
 import {UseStatePlayground} from './hooks/useState';
+import {MemoPlayground} from './api/memo';
 
 export const MyApp = () => {
     return (
-        <StrictMode>
+        <>
+            <MemoPlayground />
             <UseStatePlayground />
-        </StrictMode>
+        </>
     );
 };
