@@ -5,6 +5,8 @@ export const UseRefPlayground = () => (
         <h2>useRef playground</h2>
         <ReferencingHtmlElement />
         <KindaUseState />
+        <StateToastWrapper />
+        <RefToastWrapper />
     </div>
 );
 
@@ -23,11 +25,11 @@ const ReferencingHtmlElement = () => {
     };
 
     return (
-        <div>
+        <section>
             <div>We can use useRef to get access to html js api</div>
             <input ref={inputRef} type="text" value={value} onChange={handleInputChange} />
             <button onClick={handleButtonClick}>Focus input</button>
-        </div>
+        </section>
     );
 };
 
@@ -40,11 +42,64 @@ const KindaUseState = () => {
     }
 
     return (
-        <div>
+        <section>
             <div>We can manipulate some value without rerendering (why should we want to?)</div>
             {ref.current}
             <button onClick={handleClick}>Click me!</button>
             <button onClick={() => setState(Date.now())}>Click me to rerender and see counter value</button>
-        </div>
+        </section>
     );
+};
+
+const StateToastWrapper = () => {
+    const [timerId, setTimerId] = useState(0);
+    const [showToast, setShowToast] = useState(false);
+
+    const handler = () => {
+        setShowToast(true);
+        const newTimerId = setTimeout(() => setShowToast(false), 2e3);
+        if (timerId) {
+            clearTimeout(timerId);
+            console.log(`Timer ${timerId} cleared`);
+        }
+        setTimerId(newTimerId);
+    };
+
+    return (
+        <section>
+            <h3>
+                I store a toast timer in the state and the Toast will rerender on every click, that prolongs the timer
+            </h3>
+            {showToast && <Toast />}
+            <button onClick={handler}>show toast (or prolong it)</button>
+        </section>
+    );
+};
+
+const RefToastWrapper = () => {
+    const timerId = useRef(0);
+    const [showToast, setShowToast] = useState(false);
+
+    const handler = () => {
+        setShowToast(true);
+        const newTimerId = setTimeout(() => setShowToast(false), 2e3);
+        if (timerId.current) {
+            clearTimeout(timerId.current);
+            console.log(`Timer ${timerId} cleared`);
+        }
+        timerId.current = newTimerId;
+    };
+
+    return (
+        <section>
+            <h3>
+                I store a toast timer in the ref and the Toast will NOT rerender on every click, that prolongs the timer
+            </h3>
+            {showToast && <Toast />}
+            <button onClick={handler}>show toast (or prolong it)</button>
+        </section>
+    );
+};
+const Toast = () => {
+    return <div>Hello, I'm a toast, rendered at {Date.now()}!</div>;
 };
