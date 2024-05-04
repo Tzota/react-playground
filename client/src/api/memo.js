@@ -6,7 +6,7 @@ export const MemoPlayground = () => {
             <h2>Memo Playground</h2>
             <ParentComponent>
                 <ChildComponent
-                    name="Passing as children won't lead to rerendering on oarent state change"
+                    name="Passing as children won't lead to rerendering on parent state change"
                     parentState={-1}
                 />
             </ParentComponent>
@@ -30,6 +30,8 @@ const ParentComponent = ({children}) => {
 
 const ChildComponent = ({name, parentState}) => {
     const ref = useRef(0);
+    // They don't recommend mutating ref during rendering cuz it violates pure function rule
+    // https://react.dev/reference/react/useRef
     ref.current++;
 
     return (
